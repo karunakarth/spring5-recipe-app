@@ -6,7 +6,7 @@ import com.spring5recipeapp.converters.RecipeToRecipeCommand;
 import com.spring5recipeapp.domain.Recipe;
 import com.spring5recipeapp.repositories.RecipeRepository;
 import org.junit.Before;
-import org.junit.jupiter.api.Test;
+import org.junit.Test;
 import org.mockito.Mock;
 import org.mockito.MockitoAnnotations;
 
@@ -14,10 +14,13 @@ import java.util.HashSet;
 import java.util.Optional;
 import java.util.Set;
 
+import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
-import static org.junit.jupiter.api.Assertions.assertEquals;
 import static org.mockito.Mockito.*;
 
+/**
+ * Created by jt on 6/17/17.
+ */
 public class RecipeServiceImplTest {
 
     RecipeServiceImpl recipeService;
@@ -54,7 +57,7 @@ public class RecipeServiceImplTest {
     }
 
     @Test
-    public void getRecipeCoomandByIdTest() throws Exception {
+    public void getRecipeCommandByIdTest() throws Exception {
         Recipe recipe = new Recipe();
         recipe.setId(1L);
         Optional<Recipe> recipeOptional = Optional.of(recipe);
@@ -80,6 +83,7 @@ public class RecipeServiceImplTest {
         HashSet receipesData = new HashSet();
         receipesData.add(recipe);
 
+        //when(recipeService.getRecipes()).thenReturn(receipesData);
         when(recipeRepository.findAll()).thenReturn(receipesData);
 
         Set<Recipe> recipes = recipeService.getRecipes();
@@ -89,4 +93,18 @@ public class RecipeServiceImplTest {
         verify(recipeRepository, never()).findById(anyLong());
     }
 
+    @Test
+    public void testDeleteById() throws Exception {
+
+        //given
+        Long idToDelete = Long.valueOf(2L);
+
+        //when
+        recipeService.deleteById(idToDelete);
+
+        //no 'when', since method has void return type
+
+        //then
+        verify(recipeRepository, times(1)).deleteById(anyLong());
+    }
 }
